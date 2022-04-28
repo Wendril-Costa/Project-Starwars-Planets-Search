@@ -4,6 +4,7 @@ import MyContext from './MyContext';
 
 function Provider({ children }) {
   const [planetsList, setPlanetsList] = useState([]);
+  const [search, setSearch] = useState('');
   const endpoint = 'https://swapi-trybe.herokuapp.com/api/planets/';
 
   useEffect(() => {
@@ -15,7 +16,7 @@ function Provider({ children }) {
   }, []);
 
   return (
-    <MyContext.Provider value={ { planetsList } }>
+    <MyContext.Provider value={ { planetsList, search, setSearch } }>
       { children }
     </MyContext.Provider>
   );
