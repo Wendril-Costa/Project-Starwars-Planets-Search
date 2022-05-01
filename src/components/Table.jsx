@@ -1,11 +1,33 @@
 import React, { useContext } from 'react';
 import MyContext from '../context/MyContext';
+import FilterNumber from './FilterNumber';
 
 function Table() {
-  const { planetsList, search, setSearch } = useContext(MyContext);
+  const {
+    planetsList,
+    filterName,
+    setFilterName,
+    filterNumber,
+  } = useContext(MyContext);
+
+  const handleChange = ({ target: { value } }) => {
+    setFilterName(value);
+  };
+
+  const filterValues = (element, e) => {
+    if (e?.comparison === 'maior que') return element[e.column] > +e.number;
+    if (e?.comparison === 'menor que') return element[e.column] < +e.number;
+    if (e?.comparison === 'igual a') return element[e.column] === e.number;
+    return element;
+  };
+
   const filterSearch = () => {
     const filtered = planetsList.filter(({ name }) => name.toLowerCase()
-      .includes(search.toLowerCase()));
+      .includes(filterName.toLowerCase()))
+      .filter((element) => filterValues(element, filterNumber[0]))
+      .filter((element) => filterValues(element, filterNumber[1]))
+      .filter((element) => filterValues(element, filterNumber[2]))
+      .filter((element) => filterValues(element, filterNumber[3]));
     return filtered;
   };
 
@@ -13,12 +35,14 @@ function Table() {
     <div>
       <header>
         <input
+          id="search"
           data-testid="name-filter"
           type="text"
-          value={ search }
-          onChange={ ({ target: { value } }) => setSearch(value) }
+          value={ filterName }
+          onChange={ handleChange }
         />
       </header>
+      <FilterNumber />
       <table>
         <thead>
           <tr>
